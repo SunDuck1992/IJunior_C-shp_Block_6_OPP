@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -11,30 +11,30 @@ namespace _6.Task_2
     {
         static void Main(string[] args)
         {
-            Player player = new Player(20, 20);
-            Renderer render = new Renderer();
-            render.DrawPlayer(player.X, player.Y);
+            Player player = new Player(10, 10);
+            Renderer renderer = new Renderer();
+            renderer.DrawPlayer(player.PositionX, player.PositionY);
         }
     }
 
     class Player
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
 
-        public Player(int x, int y)
+        public Player(int positionX, int positionY)
         {
-            X = x;
-            Y = y;
+            PositionX = positionX;
+            PositionY = positionY;
         }
     }
 
     class Renderer
     {
-        public void DrawPlayer(int x, int y, char player = 'P')
+        public void DrawPlayer(int x, int y, char playerSymbol = 'P')
         {
             Console.SetCursorPosition(x, y);
-            Console.Write(player);
+            Console.Write(playerSymbol);
         }
     }
 }
