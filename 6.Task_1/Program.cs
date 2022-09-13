@@ -21,33 +21,33 @@ namespace _6.Task_1
 
     class Player
     {
-        private int Health;
-        private int Mana;
-        private int Stamina;
-        private int Level;
+        private int _health;
+        private int _mana;
+        private int _stamina;
+        private int _level;
 
         public Player()
         {
-            Health = 100;
-            Mana = 40;
-            Stamina = 20;
-            Level = 1;
+            _health = 100;
+            _mana = 40;
+            _stamina = 20;
+            _level = 1;
         }
 
         public Player(int healt, int mana, int stamina, int level)
         {
-            Health = healt;
-            Mana = mana;
-            Stamina = stamina;
-            Level = level;
+            _health = healt;
+            _mana = mana;
+            _stamina = stamina;
+            _level = level;
         }
 
         public void ShowPlayerInfo()
         {
-            Console.WriteLine("Health = " + Health);
-            Console.WriteLine("Mana = " + Mana);
-            Console.WriteLine("Stamina = " + Stamina);
-            Console.WriteLine("Level = " + Level);
+            Console.WriteLine("Health = " + _health);
+            Console.WriteLine("Mana = " + _mana);
+            Console.WriteLine("Stamina = " + _stamina);
+            Console.WriteLine("Level = " + _level);
         }
     }
 }
