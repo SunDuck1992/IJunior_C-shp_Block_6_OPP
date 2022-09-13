@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,10 +21,10 @@ namespace _6.Task_1
 
     class Player
     {
-        public int Health;
-        public int Mana;
-        public int Stamina;
-        public int Level;
+        private int Health;
+        private int Mana;
+        private int Stamina;
+        private int Level;
 
         public Player()
         {
