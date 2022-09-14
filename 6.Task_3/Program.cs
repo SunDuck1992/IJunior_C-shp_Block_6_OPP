@@ -84,6 +84,7 @@ namespace _6.Task_3
             }
             else Console.WriteLine("Error, character already LOCKed");
         }
+        
         public static void DeleteCharacter()
         {
             Console.WriteLine("Input ID Characters for delete:");
@@ -126,6 +127,7 @@ namespace _6.Task_3
         public void ShowCharacterInfo()
         {
             Console.Write(IdCharacter + ". " + _nickname + " level " + _levelCharacter);
+            
             if (_isUnlocked == false)
             {
                 Console.WriteLine(" LOCKED");
