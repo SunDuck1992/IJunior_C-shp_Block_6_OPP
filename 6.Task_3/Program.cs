@@ -14,7 +14,6 @@ namespace _6.Task_3
         {
             ListCharacters listCharacters = new ListCharacters();
 
-
             while (true)
             {
                 Console.WriteLine("1 - Add Character;");
