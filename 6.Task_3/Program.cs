@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Permissions;
@@ -12,43 +12,48 @@ namespace _6.Task_3
     {
         static void Main(string[] args)
         {
-            ListCharacters listCharacters = new ListCharacters();
+            bool isWork = true;
+            DataBase listCharacters = new DataBase();
 
-            while (true)
+            while (isWork)
             {
                 Console.WriteLine("1 - Add Character;");
                 Console.WriteLine("2 - Unlock Character;");
-                Console.WriteLine("3 - Delete Character;");
-                Console.WriteLine("4 - Show Character List;");
+                Console.WriteLine("3 - Lock Character;");
+                Console.WriteLine("4 - Delete Character;");
+                Console.WriteLine("5 - Show Character List;");
                 int command = Convert.ToInt32(Console.ReadLine());
 
                 switch (command)
                 {
                     case 1:
-                        ListCharacters.AddCharacter();
+                        listCharacters.AddCharacter();
                         break;
                     case 2:
-                        ListCharacters.UnlockCharacter();
+                        listCharacters.UnlockCharacter();
                         break;
                     case 3:
-                        ListCharacters.DeleteCharacter();
+                        listCharacters.LockCharacter();
                         break;
                     case 4:
-                        ListCharacters.ShowCharacterList();
+                        listCharacters.DeleteCharacter();
                         break;
                     case 5:
-                        ListCharacters.ShowCharacterList();
+                        listCharacters.ShowCharacterList();
+                        break;
+                    case 6:
+                        isWork = false;
                         break;
                 }
             }
         }
     }
 
-    class ListCharacters
+    class DataBase
     {
-        static List<Character> listCharacters = new List<Character>();
+        List<Character> listCharacters = new List<Character>();
 
-        public static void AddCharacter()
+        public void AddCharacter()
         {
             Console.WriteLine("Input NickName you Character:");
             string nickname = Console.ReadLine();
@@ -58,33 +63,36 @@ namespace _6.Task_3
             listCharacters.Add(character);
         }
 
-        public static void UnlockCharacter()
-        {
-            Console.WriteLine("Input ID Characters for unlock:");
-            int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            int idCharacterListCharacter = (listCharacters[idCharacterInput-1].IdCharacter);
-
-            if (idCharacterInput == idCharacterListCharacter && listCharacters[idCharacterListCharacter - 1]._isUnlocked == false)
-            {
-                listCharacters[idCharacterListCharacter-1]._isUnlocked = true;
-            }
-            else Console.WriteLine("Error, character already UNLOCKed");
-        }
-
-        public static void LockCharacter()
+        public void UnlockCharacter()
         {
             Console.WriteLine("Input ID Characters for unlock:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
             int idCharacterListCharacter = (listCharacters[idCharacterInput - 1].IdCharacter);
 
-            if (idCharacterInput == idCharacterListCharacter && listCharacters[idCharacterListCharacter - 1]._isUnlocked == true)
+            if (idCharacterInput == idCharacterListCharacter && listCharacters[idCharacterListCharacter - 1].IsUnlocked == false)
             {
-                listCharacters[idCharacterListCharacter - 1]._isUnlocked = false;
+                bool isLock = true;
+                listCharacters[idCharacterInput - 1].ChangeAccessCharacter(isLock);
+            }
+            else Console.WriteLine("Error, character already UNLOCKed");
+        }
+
+        public void LockCharacter()
+        {
+            Console.WriteLine("Input ID Characters for unlock:");
+            int idCharacterInput = Convert.ToInt32(Console.ReadLine());
+            int idCharacterListCharacter = (listCharacters[idCharacterInput - 1].IdCharacter);
+
+            if (idCharacterInput == idCharacterListCharacter && listCharacters[idCharacterListCharacter - 1].IsUnlocked == true)
+            {
+                bool isLock = false;
+                listCharacters[idCharacterInput - 1].ChangeAccessCharacter(isLock);
+
             }
             else Console.WriteLine("Error, character already LOCKed");
         }
-        
-        public static void DeleteCharacter()
+
+        public void DeleteCharacter()
         {
             Console.WriteLine("Input ID Characters for delete:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
@@ -92,12 +100,12 @@ namespace _6.Task_3
 
             if (idCharacterInput == idCharacterListCharacter)
             {
-                listCharacters.RemoveAt(idCharacterListCharacter-1);
+                listCharacters.RemoveAt(idCharacterListCharacter - 1);
             }
             else Console.WriteLine("Error, can't find this character!");
         }
 
-        public static void ShowCharacterList()
+        public void ShowCharacterList()
         {
             for (int i = 0; i < listCharacters.Count; i++)
             {
@@ -109,10 +117,12 @@ namespace _6.Task_3
     class Character
     {
         private static int _idCharacterCount = 0;
-        public int IdCharacter { get; private set; }
         private string _nickname;
         private int _levelCharacter;
-        public bool _isUnlocked;
+        private bool _isUnlocked;
+
+        public int IdCharacter { get; private set; }
+        public bool IsUnlocked { get; private set; }
 
         public Character(string name, int levelCharacter)
         {
@@ -121,12 +131,13 @@ namespace _6.Task_3
             _levelCharacter = levelCharacter;
             _isUnlocked = false;
             IdCharacter = _idCharacterCount;
+            IsUnlocked = _isUnlocked;
         }
 
         public void ShowCharacterInfo()
         {
             Console.Write(IdCharacter + ". " + _nickname + " level " + _levelCharacter);
-            
+
             if (_isUnlocked == false)
             {
                 Console.WriteLine(" LOCKED");
@@ -136,5 +147,18 @@ namespace _6.Task_3
                 Console.WriteLine(" UNLOCKED");
             }
         }
+
+        public void ChangeAccessCharacter(bool isLock)
+        {
+            if (isLock == true)
+            {
+                _isUnlocked = true;
+            }
+            else if (isLock == false)
+            {
+                _isUnlocked = false;
+            }
+        }
+
     }
 }
