@@ -22,6 +22,7 @@ namespace _6.Task_3
                 Console.WriteLine("3 - Lock Character;");
                 Console.WriteLine("4 - Delete Character;");
                 Console.WriteLine("5 - Show Character List;");
+                Console.WriteLine("6 - EXIT;");
                 int command = Convert.ToInt32(Console.ReadLine());
 
                 switch (command)
@@ -51,7 +52,7 @@ namespace _6.Task_3
 
     class DataBase
     {
-        List<Character> listCharacters = new List<Character>();
+        private List<Character> characters = new List<Character>();
 
         public void AddCharacter()
         {
@@ -60,19 +61,19 @@ namespace _6.Task_3
             Console.WriteLine("Input level you Character:");
             int level = Convert.ToInt32(Console.ReadLine());
             Character character = new Character(nickname, level);
-            listCharacters.Add(character);
+            characters.Add(character);
         }
 
         public void UnlockCharacter()
         {
             Console.WriteLine("Input ID Characters for unlock:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            int idCharacterListCharacter = (listCharacters[idCharacterInput - 1].IdCharacter);
+            int idCharacterListCharacter = (characters[idCharacterInput - 1].IdCharacter);
 
-            if (idCharacterInput == idCharacterListCharacter && listCharacters[idCharacterListCharacter - 1].IsUnlocked == false)
+            if (idCharacterInput == idCharacterListCharacter && characters[idCharacterListCharacter - 1].IsUnlocked == false)
             {
                 bool isLock = true;
-                listCharacters[idCharacterInput - 1].ChangeAccessCharacter(isLock);
+                characters[idCharacterInput - 1].ChangeAccessCharacter(isLock);
             }
             else Console.WriteLine("Error, character already UNLOCKed");
         }
@@ -81,12 +82,12 @@ namespace _6.Task_3
         {
             Console.WriteLine("Input ID Characters for unlock:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            int idCharacterListCharacter = (listCharacters[idCharacterInput - 1].IdCharacter);
+            int idCharacterListCharacter = (characters[idCharacterInput - 1].IdCharacter);
 
-            if (idCharacterInput == idCharacterListCharacter && listCharacters[idCharacterListCharacter - 1].IsUnlocked == true)
+            if (idCharacterInput == idCharacterListCharacter && characters[idCharacterListCharacter - 1].IsUnlocked == true)
             {
                 bool isLock = false;
-                listCharacters[idCharacterInput - 1].ChangeAccessCharacter(isLock);
+                characters[idCharacterInput - 1].ChangeAccessCharacter(isLock);
 
             }
             else Console.WriteLine("Error, character already LOCKed");
@@ -96,20 +97,20 @@ namespace _6.Task_3
         {
             Console.WriteLine("Input ID Characters for delete:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            int idCharacterListCharacter = (listCharacters[idCharacterInput - 1].IdCharacter);
+            int idCharacterListCharacter = (characters[idCharacterInput - 1].IdCharacter);
 
             if (idCharacterInput == idCharacterListCharacter)
             {
-                listCharacters.RemoveAt(idCharacterListCharacter - 1);
+                characters.RemoveAt(idCharacterListCharacter - 1);
             }
             else Console.WriteLine("Error, can't find this character!");
         }
 
         public void ShowCharacterList()
         {
-            for (int i = 0; i < listCharacters.Count; i++)
+            for (int i = 0; i < characters.Count; i++)
             {
-                listCharacters[i].ShowCharacterInfo();
+                characters[i].ShowCharacterInfo();
             }
         }
     }
@@ -122,6 +123,7 @@ namespace _6.Task_3
         private bool _isUnlocked;
 
         public int IdCharacter { get; private set; }
+
         public bool IsUnlocked { get; private set; }
 
         public Character(string name, int levelCharacter)
@@ -159,6 +161,5 @@ namespace _6.Task_3
                 _isUnlocked = false;
             }
         }
-
     }
 }
