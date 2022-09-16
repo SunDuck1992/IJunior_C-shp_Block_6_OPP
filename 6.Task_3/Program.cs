@@ -57,18 +57,45 @@ namespace _6.Task_3
         }
     }
 
+    static class UserUtils
+    {
+        static public int TryGetNumber()
+        {
+            int resault = 0;
+            bool isWork = true;
+
+            while (isWork)
+            {
+                string userInput = Console.ReadLine();
+                bool success = int.TryParse(userInput, out int resaultParse);
+
+                if (resaultParse >= 0 && success == true)
+                {
+                    resault = resaultParse;
+                    isWork = false;
+                }
+                else
+                {
+                    Console.WriteLine("Input error. Please, input number:");
+                }
+            }
+
+            return resault;
+        }
+    }
+
     class Database
     {
-        private List<Character> characters = new List<Character>();
+        private List<Character> _characters = new List<Character>();
 
         public void AddCharacter()
         {
             Console.WriteLine("Input NickName you Character:");
             string nickname = Console.ReadLine();
             Console.WriteLine("Input level you Character:");
-            int level = Convert.ToInt32(Console.ReadLine());
+            int level = UserUtils.TryGetNumber();
             Character character = new Character(nickname, level);
-            characters.Add(character);
+            _characters.Add(character);
         }
 
         public void UnlockCharacter()
@@ -89,34 +116,35 @@ namespace _6.Task_3
         {
             Console.WriteLine("Input ID Characters for delete:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            for (int i = 0; i < characters.Count; i++)
+
+            for (int i = 0; i < _characters.Count; i++)
             {
-                if (characters[i].IdCharacter == idCharacterInput)
+                if (_characters[i].IdCharacter == idCharacterInput)
                 {
-                    characters.RemoveAt(i);
-                }               
+                    _characters.RemoveAt(i);
+                }
             }
         }
 
         public void ShowCharacterList()
         {
-            for (int i = 0; i < characters.Count; i++)
+            for (int i = 0; i < _characters.Count; i++)
             {
-                characters[i].ShowCharacterInfo();
+                _characters[i].ShowCharacterInfo();
             }
         }
 
         private void TryGetPlayerAcess(int idCharacterInput)
         {
-            for (int i = 0; i < characters.Count; i++)
+            for (int i = 0; i < _characters.Count; i++)
             {
-                if (idCharacterInput == characters[i].IdCharacter && characters[i].IsUnlocked == false)
+                if (idCharacterInput == _characters[i].IdCharacter && _characters[i].IsUnlocked == false)
                 {
-                    characters[i].LockCharacter();
+                    _characters[i].LockCharacter();
                 }
-                else if (idCharacterInput == characters[i].IdCharacter && characters[i].IsUnlocked == true)
+                else if (idCharacterInput == _characters[i].IdCharacter && _characters[i].IsUnlocked == true)
                 {
-                    characters[i].UnlockCharacter();
+                    _characters[i].UnlockCharacter();
                 }
             }
         }
