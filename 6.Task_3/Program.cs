@@ -59,7 +59,7 @@ namespace _6.Task_3
 
     static class UserUtils
     {
-        static public int TryGetNumber()
+        static public int ReadInt()
         {
             int resault = 0;
             bool isWork = true;
@@ -93,7 +93,7 @@ namespace _6.Task_3
             Console.WriteLine("Input NickName you Character:");
             string nickname = Console.ReadLine();
             Console.WriteLine("Input level you Character:");
-            int level = UserUtils.TryGetNumber();
+            int level = UserUtils.ReadInt();
             Character character = new Character(nickname, level);
             _characters.Add(character);
         }
@@ -102,24 +102,26 @@ namespace _6.Task_3
         {
             Console.WriteLine("Input ID Characters for unlock:");
             int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            TryGetPlayerAcess(idCharacterInput);
+            TryFindCharacter(idCharacterInput, out Character findCharacter);
+            findCharacter.UnlockCharacter(findCharacter);
         }
 
         public void LockCharacter()
         {
             Console.WriteLine("Input ID Characters for lock:");
-            int idCharacterInput = Convert.ToInt32(Console.ReadLine());
-            TryGetPlayerAcess(idCharacterInput);
+            int idCharacterInput = UserUtils.ReadInt();
+            TryFindCharacter(idCharacterInput, out Character findCharacter);
+            findCharacter.LockCharacter(findCharacter);
         }
 
         public void DeleteCharacter()
         {
             Console.WriteLine("Input ID Characters for delete:");
-            int idCharacterInput = Convert.ToInt32(Console.ReadLine());
+            int idCharacterInput = UserUtils.ReadInt();
 
             for (int i = 0; i < _characters.Count; i++)
             {
-                if (_characters[i].IdCharacter == idCharacterInput)
+                if (_characters[i].Id == idCharacterInput)
                 {
                     _characters.RemoveAt(i);
                 }
@@ -134,19 +136,26 @@ namespace _6.Task_3
             }
         }
 
-        private void TryGetPlayerAcess(int idCharacterInput)
+        private bool TryFindCharacter(int idCharacterInput , out Character character)
         {
+            bool IsFind = false;
+            character = null;
+
             for (int i = 0; i < _characters.Count; i++)
             {
-                if (idCharacterInput == _characters[i].IdCharacter && _characters[i].IsUnlocked == false)
+                if (idCharacterInput == _characters[i].Id)
                 {
-                    _characters[i].LockCharacter();
+                    IsFind = true;
+                    character = _characters[i];
+                    return IsFind;                    
                 }
-                else if (idCharacterInput == _characters[i].IdCharacter && _characters[i].IsUnlocked == true)
+                else
                 {
-                    _characters[i].UnlockCharacter();
-                }
+                    Console.WriteLine("Character is not found!");
+                }                
             }
+
+            return IsFind;           
         }
     }
 
@@ -154,9 +163,9 @@ namespace _6.Task_3
     {
         private static int _idCount = 0;
         private string _nickname;
-        private int _levelCharacter;
+        private int _level;
 
-        public int IdCharacter { get; private set; }
+        public int Id { get; private set; }
 
         public bool IsUnlocked { get; private set; }
 
@@ -164,14 +173,14 @@ namespace _6.Task_3
         {
             _idCount += 1;
             _nickname = name;
-            _levelCharacter = levelCharacter;
-            IdCharacter = _idCount;
+            _level = levelCharacter;
+            Id = _idCount;
             IsUnlocked = false;
         }
 
         public void ShowCharacterInfo()
         {
-            Console.Write(IdCharacter + ". " + _nickname + " level " + _levelCharacter);
+            Console.Write(Id + ". " + _nickname + " level " + _level);
 
             if (IsUnlocked == false)
             {
@@ -183,14 +192,15 @@ namespace _6.Task_3
             }
         }
 
-        public void LockCharacter()
+        public void LockCharacter(Character character)
+        {
+            IsUnlocked = false;
+        }
+
+        public void UnlockCharacter(Character character)
         {
             IsUnlocked = true;
         }
 
-        public void UnlockCharacter()
-        {
-            IsUnlocked = false;
-        }
     }
 }
