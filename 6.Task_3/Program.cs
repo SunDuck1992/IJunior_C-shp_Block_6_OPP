@@ -101,9 +101,17 @@ namespace _6.Task_3
         public void UnlockCharacter()
         {
             Console.WriteLine("Input ID Characters for unlock:");
-            int idCharacterInput = Convert.ToInt32(Console.ReadLine());
+            int idCharacterInput = UserUtils.ReadInt();
             TryFindCharacter(idCharacterInput, out Character findCharacter);
-            findCharacter.UnlockCharacter(findCharacter);
+           
+            if (findCharacter != null)
+            {
+                findCharacter.Unlock();
+            }
+            else
+            {
+                Console.WriteLine("Can't find this character. Pleasy try again");
+            }
         }
 
         public void LockCharacter()
@@ -111,51 +119,47 @@ namespace _6.Task_3
             Console.WriteLine("Input ID Characters for lock:");
             int idCharacterInput = UserUtils.ReadInt();
             TryFindCharacter(idCharacterInput, out Character findCharacter);
-            findCharacter.LockCharacter(findCharacter);
+            
+            if (findCharacter != null)
+            {
+                findCharacter.Lock();
+            }
+            else
+            {
+                Console.WriteLine("Can't find this character. Pleasy try again");
+            }
         }
 
         public void DeleteCharacter()
         {
             Console.WriteLine("Input ID Characters for delete:");
             int idCharacterInput = UserUtils.ReadInt();
-
-            for (int i = 0; i < _characters.Count; i++)
-            {
-                if (_characters[i].Id == idCharacterInput)
-                {
-                    _characters.RemoveAt(i);
-                }
-            }
+            TryFindCharacter(idCharacterInput, out Character findCharacter);
+            _characters.Remove(findCharacter);           
         }
 
         public void ShowCharacterList()
         {
             for (int i = 0; i < _characters.Count; i++)
             {
-                _characters[i].ShowCharacterInfo();
+                _characters[i].ShowInfo();
             }
         }
 
         private bool TryFindCharacter(int idCharacterInput , out Character character)
         {
-            bool IsFind = false;
             character = null;
 
             for (int i = 0; i < _characters.Count; i++)
             {
                 if (idCharacterInput == _characters[i].Id)
-                {
-                    IsFind = true;
+                {                    
                     character = _characters[i];
-                    return IsFind;                    
-                }
-                else
-                {
-                    Console.WriteLine("Character is not found!");
-                }                
+                    return true;                    
+                }                            
             }
 
-            return IsFind;           
+            return false;           
         }
     }
 
@@ -169,16 +173,16 @@ namespace _6.Task_3
 
         public bool IsUnlocked { get; private set; }
 
-        public Character(string name, int levelCharacter)
+        public Character(string name, int level)
         {
             _idCount += 1;
             _nickname = name;
-            _level = levelCharacter;
+            _level = level;
             Id = _idCount;
             IsUnlocked = false;
         }
 
-        public void ShowCharacterInfo()
+        public void ShowInfo()
         {
             Console.Write(Id + ". " + _nickname + " level " + _level);
 
@@ -192,15 +196,14 @@ namespace _6.Task_3
             }
         }
 
-        public void LockCharacter(Character character)
+        public void Lock()
         {
             IsUnlocked = false;
         }
 
-        public void UnlockCharacter(Character character)
+        public void Unlock()
         {
             IsUnlocked = true;
         }
-
     }
 }
