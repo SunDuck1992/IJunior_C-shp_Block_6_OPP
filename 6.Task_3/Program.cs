@@ -59,7 +59,7 @@ namespace _6.Task_3
 
     static class UserUtils
     {
-        static public int ReadInt()
+        static public int ReadPoritiveInt()
         {
             int resault = 0;
             bool isWork = true;
@@ -93,7 +93,7 @@ namespace _6.Task_3
             Console.WriteLine("Input NickName you Character:");
             string nickname = Console.ReadLine();
             Console.WriteLine("Input level you Character:");
-            int level = UserUtils.ReadInt();
+            int level = UserUtils.ReadPoritiveInt();
             Character character = new Character(nickname, level);
             _characters.Add(character);
         }
@@ -101,10 +101,9 @@ namespace _6.Task_3
         public void UnlockCharacter()
         {
             Console.WriteLine("Input ID Characters for unlock:");
-            int idCharacterInput = UserUtils.ReadInt();
-            TryFindCharacter(idCharacterInput, out Character findCharacter);
+            int idCharacterInput = UserUtils.ReadPoritiveInt();
            
-            if (findCharacter != null)
+            if (TryFindCharacter(idCharacterInput, out Character findCharacter))
             {
                 findCharacter.Unlock();
             }
@@ -117,10 +116,9 @@ namespace _6.Task_3
         public void LockCharacter()
         {
             Console.WriteLine("Input ID Characters for lock:");
-            int idCharacterInput = UserUtils.ReadInt();
-            TryFindCharacter(idCharacterInput, out Character findCharacter);
+            int idCharacterInput = UserUtils.ReadPoritiveInt();            
             
-            if (findCharacter != null)
+            if (TryFindCharacter(idCharacterInput, out Character findCharacter))
             {
                 findCharacter.Lock();
             }
@@ -133,7 +131,7 @@ namespace _6.Task_3
         public void DeleteCharacter()
         {
             Console.WriteLine("Input ID Characters for delete:");
-            int idCharacterInput = UserUtils.ReadInt();
+            int idCharacterInput = UserUtils.ReadPoritiveInt();
             TryFindCharacter(idCharacterInput, out Character findCharacter);
             _characters.Remove(findCharacter);           
         }
@@ -190,7 +188,7 @@ namespace _6.Task_3
             {
                 Console.WriteLine(" LOCKED");
             }
-            else if (IsUnlocked == true)
+            else 
             {
                 Console.WriteLine(" UNLOCKED");
             }
