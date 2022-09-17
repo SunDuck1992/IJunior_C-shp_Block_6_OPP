@@ -1,4 +1,4 @@
-﻿using _6.Task_4;
+using _6.Task_4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,82 +15,74 @@ namespace _6.Task_4
         {
             bool isWorked = true;
             Player player = new Player();
-            DeckCards deck = new DeckCards();
-            
+            Deck deck = new Deck();
+
             while (isWorked)
             {
                 Console.WriteLine("Press ENTER to give next card form desk");
                 Console.ReadLine();
-                
+
                 if (deck.IsEmpty())
                 {
                     Console.WriteLine("Deck is finish. You have full deck in you hands");
-                    player.ShowPlayerDeck();                   
                     isWorked = false;
                 }
                 else
                 {
                     Console.WriteLine("Push card from deck");
-                    PlayingCard playingCard = deck.GiveCard();
+                    Card playingCard = deck.GiveCard();
                     player.TakeCard(playingCard);
                 }
 
                 Console.WriteLine("Card in you hands");
-                player.ShowPlayerDeck();               
+                player.ShowDeck();
             }
-        }        
+        }
     }
 
-    class PlayingCard
+    class Card
     {
         public string Suit { get; private set; }
         public string Value { get; private set; }
 
-        public PlayingCard(string suit, string points)
+        public Card(string suit, string points)
         {
             Suit = suit;
             Value = points;
         }
     }
 
-    class DeckCards
-    {              
-        private Stack<PlayingCard> _cardDeck = new Stack<PlayingCard>();
+    class Deck
+    {
+        private Stack<Card> _cardDeck = new Stack<Card>();
 
-        public DeckCards()
+        public Deck()
         {
-            CreateShuffleDeck();
+            Create();
         }
 
-        public bool IsEmpty ()
+        public bool IsEmpty()
         {
-            if (_cardDeck.Count == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return _cardDeck.Count == 0;
         }
 
-        public PlayingCard GiveCard()
+        public Card GiveCard()
         {
             return _cardDeck.Pop();
         }
-        
-        private void CreateShuffleDeck()
+
+        private void Create()
         {
             string[] suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
             string[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
 
-            List<PlayingCard> allCards = new List<PlayingCard>();
+            List<Card> allCards = new List<Card>();
 
             for (int i = 0; i < suits.Length; i++)
             {
                 for (int j = 0; j < ranks.Length; j++)
                 {
-                    allCards.Add(new PlayingCard(suits[i], ranks[j]));
+                    allCards.Add(new Card(suits[i], ranks[j]));
                 }
             }
 
@@ -99,7 +91,7 @@ namespace _6.Task_4
             AddCard(allCards);
         }
 
-        private void AddCard(List<PlayingCard> allCards)
+        private void AddCard(List<Card> allCards)
         {
             foreach (var card in allCards)
             {
@@ -107,32 +99,30 @@ namespace _6.Task_4
             }
         }
 
-        private void Shuffle(List<PlayingCard> allCards)
+        private void Shuffle(List<Card> allCards)
         {
             Random random = new Random();
             int count = allCards.Count;
 
             for (int i = 0; i < count; i++)
             {
-                PlayingCard tempCard = allCards[i];
+                Card tempCard = allCards[i];
                 allCards.RemoveAt(i);
                 allCards.Insert(random.Next(0, count), tempCard);
             }
         }
-
-        
     }
 
     class Player
     {
-        private List<PlayingCard> _playerCardDeck = new List<PlayingCard>();       
+        private List<Card> _playerCardDeck = new List<Card>();
 
-        public void TakeCard(PlayingCard card)
+        public void TakeCard(Card card)
         {
             _playerCardDeck.Add(card);
         }
-        
-        public void ShowPlayerDeck()
+
+        public void ShowDeck()
         {
             foreach (var card in _playerCardDeck)
             {
@@ -141,6 +131,3 @@ namespace _6.Task_4
         }
     }
 }
-
-
-
