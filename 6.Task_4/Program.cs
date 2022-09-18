@@ -13,19 +13,20 @@ namespace _6.Task_4
     {
         static void Main(string[] args)
         {
-            bool isWorked = true;
+            bool isWorking = true;
             Player player = new Player();
             Deck deck = new Deck();
 
-            while (isWorked)
+            while (isWorking)
             {
                 Console.WriteLine("Press ENTER to give next card form desk");
-                Console.ReadLine();
+                Console.WriteLine("Press ESC to finish progtramm");
+                ConsoleKeyInfo key = Console.ReadKey();
 
-                if (deck.IsEmpty())
+                if (deck.IsEmpty() || key.Key == ConsoleKey.Escape )
                 {
-                    Console.WriteLine("Deck is finish. You have full deck in you hands");
-                    isWorked = false;
+                    Console.WriteLine("\nWe are finished.");
+                    isWorking = false;
                 }
                 else
                 {
@@ -33,10 +34,10 @@ namespace _6.Task_4
                     Card playingCard = deck.GiveCard();
                     player.TakeCard(playingCard);
                 }
-
-                Console.WriteLine("Card in you hands");
-                player.ShowDeck();
             }
+
+            Console.WriteLine("Card in you hands");
+            player.ShowDeck();
         }
     }
 
@@ -54,7 +55,7 @@ namespace _6.Task_4
 
     class Deck
     {
-        private Stack<Card> _cardDeck = new Stack<Card>();
+        private Stack<Card> _card = new Stack<Card>();
 
         public Deck()
         {
@@ -63,12 +64,12 @@ namespace _6.Task_4
 
         public bool IsEmpty()
         {
-            return _cardDeck.Count == 0;
+            return _card.Count == 0;
         }
 
         public Card GiveCard()
         {
-            return _cardDeck.Pop();
+            return _card.Pop();
         }
 
         private void Create()
@@ -95,7 +96,7 @@ namespace _6.Task_4
         {
             foreach (var card in allCards)
             {
-                _cardDeck.Push(card);
+                _card.Push(card);
             }
         }
 
@@ -115,16 +116,16 @@ namespace _6.Task_4
 
     class Player
     {
-        private List<Card> _playerCardDeck = new List<Card>();
+        private List<Card> _card = new List<Card>();
 
         public void TakeCard(Card card)
         {
-            _playerCardDeck.Add(card);
+            _card.Add(card);
         }
 
         public void ShowDeck()
         {
-            foreach (var card in _playerCardDeck)
+            foreach (var card in _card)
             {
                 Console.WriteLine(card.Suit + " " + card.Value);
             }
