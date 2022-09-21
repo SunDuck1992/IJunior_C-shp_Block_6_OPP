@@ -1,207 +1,216 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace _6.Task_3
+namespace homeWork6_3._1
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
             const string CommandAddCharacter = "1";
-            const string CommandUnlockCharacter = "2";
-            const string CommandLockCharacter = "3";
-            const string CommandDeleteCharacter = "4";
-            const string CommandShowCharacterList = "5";
+            const string CommandShowCharacters = "2";
+            const string CommandDeleteCharacter = "3";
+            const string CommandLockCharacter = "4";
+            const string CommandUnLockCharacter = "5";
             const string CommandExit = "6";
             bool isWork = true;
-
             Database database = new Database();
+            Console.SetCursorPosition(40, 0);
+            Console.WriteLine("Меню базы данных:");
+            Console.WriteLine("Добавить игрока - " + CommandAddCharacter);
+            Console.WriteLine("Показать всех текущих игроков - " + CommandShowCharacters);
+            Console.WriteLine("Удалить игрока по его номеру - " + CommandDeleteCharacter);
+            Console.WriteLine("Заблокировать игрока - " + CommandLockCharacter);
+            Console.WriteLine("Разблокировать игрока - " + CommandUnLockCharacter);
+            Console.WriteLine("Завершение работы с базой - " + CommandExit);
 
             while (isWork)
-            {
-                Console.WriteLine(CommandAddCharacter + ". - Add charater");
-                Console.WriteLine(CommandUnlockCharacter + ". - Unlock charater");
-                Console.WriteLine(CommandLockCharacter + ". - Lock charater");
-                Console.WriteLine(CommandDeleteCharacter + ". - Delete charater");
-                Console.WriteLine(CommandShowCharacterList + ". - Show charater list");
-                Console.WriteLine(CommandExit + ". - EXIT");
-                string command = Console.ReadLine();
-
-                switch (command)
+            {              
+                string message = Console.ReadLine();
+                              
+                switch (message)
                 {
                     case CommandAddCharacter:
-                        database.AddCharacter();
+                        database.AddPlayer();
                         break;
-                    case CommandUnlockCharacter:
-                        database.UnlockCharacter();
+
+                    case CommandShowCharacters:
+                        database.ShowPlayersList();
                         break;
-                    case CommandLockCharacter:
-                        database.LockCharacter();
-                        break;
+
                     case CommandDeleteCharacter:
-                        database.DeleteCharacter();
+                        database.DeletePlayer();
                         break;
-                    case CommandShowCharacterList:
-                        database.ShowCharacterList();
+
+                    case CommandLockCharacter:
+                        database.BanPlayer();
                         break;
+
+                    case CommandUnLockCharacter:
+                        database.UnBanPlayer();
+                        break;
+
                     case CommandExit:
                         isWork = false;
                         break;
-                }
+                }               
             }
-        }
-    }
-
-    static class UserUtils
-    {
-        static public int ReadPoritiveInt()
-        {
-            int resault = 0;
-            bool isWork = true;
-
-            while (isWork)
-            {
-                string userInput = Console.ReadLine();
-                bool success = int.TryParse(userInput, out int resaultParse);
-
-                if (resaultParse >= 0 && success == true)
-                {
-                    resault = resaultParse;
-                    isWork = false;
-                }
-                else
-                {
-                    Console.WriteLine("Input error. Please, input number:");
-                }
-            }
-
-            return resault;
         }
     }
 
     class Database
     {
-        private List<Character> _characters = new List<Character>();
-
-        public void AddCharacter()
+        private List<Player> _players = new List<Player>();
+        public void AddPlayer()
         {
-            Console.WriteLine("Input NickName you Character:");
-            string nickname = Console.ReadLine();
-            Console.WriteLine("Input level you Character:");
-            int level = UserUtils.ReadPoritiveInt();
-            Character character = new Character(nickname, level);
-            _characters.Add(character);
+            Console.WriteLine("Введите никнейм игрока:");
+            string inputName = Console.ReadLine();
+            Console.WriteLine("Введите уровень игрока:");
+            int inputLevel = Convert.ToInt32(Console.ReadLine());
+            Player player = new Player(inputName, inputLevel);
+            _players.Add(player);
         }
 
-        public void UnlockCharacter()
+        public void ShowPlayersList()
         {
-            Console.WriteLine("Input ID Characters for unlock:");
-            int idCharacterInput = UserUtils.ReadPoritiveInt();
-           
-            if (TryFindCharacter(idCharacterInput, out Character findCharacter))
+            for (int i = 0; i < _players.Count; i++)
             {
-                findCharacter.Unlock();
-            }
-            else
-            {
-                Console.WriteLine("Can't find this character. Pleasy try again");
+                _players[i].ShowPlayerInfo();
+                Console.WriteLine();
+                Console.WriteLine();                
             }
         }
 
-        public void LockCharacter()
+        public void DeletePlayer()
         {
-            Console.WriteLine("Input ID Characters for lock:");
-            int idCharacterInput = UserUtils.ReadPoritiveInt();            
-            
-            if (TryFindCharacter(idCharacterInput, out Character findCharacter))
+            Console.WriteLine("Введите порядковый номер игрока, которого хотите удалить:");
+            int userInput = UserUnilities.ReadInt();
+
+            for (int  i = 0;  i < _players.Count;  i++)
             {
-                findCharacter.Lock();
-            }
-            else
+                if (userInput == _players[i].Id)
+                {
+                    _players.RemoveAt(i);
+                    Console.WriteLine("Игрок удален!");
+                }
+
+                else
+                {
+                    Console.WriteLine("Игрока с таким номером нет в базе!");
+                }
+            }         
+        }
+
+        public void BanPlayer()
+        {
+            Console.WriteLine("Введите номер игрока, которого хотите забанить:");
+            int inputUserId = UserUnilities.ReadInt();
+
+            for (int i = 0; i < _players.Count; i++)
             {
-                Console.WriteLine("Can't find this character. Pleasy try again");
+                if (inputUserId == _players[i].Id)
+                {
+                    _players[i].Banned();
+                    Console.WriteLine("Бан в студию!");
+                }
+
+                else
+                {
+                    Console.WriteLine("Игрока с таким номером нет в базе!");
+                }
             }
         }
 
-        public void DeleteCharacter()
+        public void UnBanPlayer()
         {
-            Console.WriteLine("Input ID Characters for delete:");
-            int idCharacterInput = UserUtils.ReadPoritiveInt();
-            TryFindCharacter(idCharacterInput, out Character findCharacter);
-            _characters.Remove(findCharacter);           
-        }
+            Console.WriteLine("Введите номер игрока, с которого нужно снять бан:");
+            int inputUserId = UserUnilities.ReadInt();
 
-        public void ShowCharacterList()
-        {
-            for (int i = 0; i < _characters.Count; i++)
+            for (int i = 0; i < _players.Count; i++)
             {
-                _characters[i].ShowInfo();
+                if (inputUserId == _players[i].Id)
+                {
+                    _players[i].UnBanned();
+                    Console.WriteLine("Бан снят!");
+                }
+
+                else
+                {
+                    Console.WriteLine("Игрока с таким номером нет в базе!");
+                }
             }
-        }
-
-        private bool TryFindCharacter(int idCharacterInput , out Character character)
-        {
-            character = null;
-
-            for (int i = 0; i < _characters.Count; i++)
-            {
-                if (idCharacterInput == _characters[i].Id)
-                {                    
-                    character = _characters[i];
-                    return true;                    
-                }                            
-            }
-
-            return false;           
         }
     }
 
-    class Character
+    class Player
     {
-        private static int _idCount = 0;
-        private string _nickname;
+        static private int _id = 0;
+        private string _name;
         private int _level;
-
         public int Id { get; private set; }
+        public bool IsBan { get; private set; }
 
-        public bool IsUnlocked { get; private set; }
-
-        public Character(string name, int level)
+        public Player(string name, int level)
         {
-            _idCount += 1;
-            _nickname = name;
+            _id++;
+            _name = name;
             _level = level;
-            Id = _idCount;
-            IsUnlocked = false;
+            Id = _id;
+            IsBan = false;
         }
 
-        public void ShowInfo()
+        public void ShowPlayerInfo()
         {
-            Console.Write(Id + ". " + _nickname + " level " + _level);
+            Console.Write("Порядковый номер игрока - " + Id + "|| Никнейм игрока - " + _name + "|| Уровень игрока - " + _level);
 
-            if (IsUnlocked == false)
+            if (IsBan == false)
             {
-                Console.WriteLine(" LOCKED");
+                Console.Write(" - Бана нет");
             }
-            else 
+
+            if (IsBan == true)
             {
-                Console.WriteLine(" UNLOCKED");
+                Console.Write(" - Игрок заблокирован!");
             }
         }
 
-        public void Lock()
+        public void Banned()
         {
-            IsUnlocked = false;
+            IsBan = true;
         }
 
-        public void Unlock()
+        public void UnBanned()
         {
-            IsUnlocked = true;
+            IsBan = false;
+        }
+    }
+    static class UserUnilities
+    {
+        public static int ReadInt()
+        {
+            int resalt = 0;
+            bool isWork = true;
+
+            while (isWork)
+            {
+                string userInput = Console.ReadLine();
+                bool success = int.TryParse(userInput, out int inputResalt);
+
+                if (inputResalt >= 0 && success == true)
+                {
+                    resalt = inputResalt;
+                    isWork = false;
+                }
+
+                else
+                {
+                    Console.WriteLine("Ошибка ввода. Введите число!");
+                }
+            }
+            return resalt;
         }
     }
 }
